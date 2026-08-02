@@ -1,7 +1,8 @@
 set.seed(10)
 library(glue)
-source("src/utils/plotchanges.R")
-source("scripts/cusum/cusumex.R")
+source("~/Desktop/CPA/Final Code/plotchanges.R")
+source("~/Desktop/CPA/Final Code/cusumex.R")
+
 cusum_wrapper <- function(z, start, c, n, join = FALSE) {
   m <- length(z)
   if (m < 2) {
@@ -39,7 +40,6 @@ binseg_mean <- function(x, start, end, c, join = FALSE) {
   global_tau <- start + relative_tau - 1
   print(glue("Max tau is {global_tau}"))
   if (LR > c) {
-    changepoints <- c(changepoints, global_tau)
     print(glue("Changepoint at {global_tau}, with LR statistic {LR}"))
     left_points <- binseg_mean(x, start, global_tau, c, join = TRUE)
     right_points <- binseg_mean(x, global_tau + 1, end, c, join = TRUE)

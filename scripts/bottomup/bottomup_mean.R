@@ -1,3 +1,4 @@
+library(ggplot2)
 source("src/utils/plotchanges.R")
 source("scripts/cusum/cusumex.R")
 set.seed(123)
@@ -75,7 +76,6 @@ deltalist <- function(x) {
   deltalist <- numeric(length(segments) - 2)
   iter <- 1
 
-  merged <- FALSE
   while (length(segments) > 2) {
     deltamin <- Inf
     merge_index <- 0

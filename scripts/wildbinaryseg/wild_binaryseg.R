@@ -16,7 +16,7 @@ cusum_wrapper <- function(z, start, c, n, join = FALSE) {
   global_cusum[start:(start + m - 2)] <- cusum
   # cusum_plot(z, cons_threshold, close_threshold, start)
 
-  y_limits <- range(c(0, c, cusum), na.rm = TRUE)
+  # y_limits <- range(c(0, c, cusum), na.rm = TRUE)
 
   LRtau <- max(cusum, na.rm = TRUE)
   if (LRtau == -Inf) {

@@ -1,5 +1,7 @@
 set.seed(15)
-source("src/utils/plotchanges.R")
+library(ggplot2)
+source("~/Desktop/CPA/Final Code/plotchanges.R")
+
 cusum <- function(x, t) {
   n <- length(x)
   l1 <- t
@@ -20,6 +22,7 @@ pre_sum <- function(x) {
   for (i in 2:n) {
     s[i] <- s[i - 1] + x[i]
   }
+  s
 }
 cusum_vec <- function(x) {
   n <- length(x)
@@ -31,8 +34,7 @@ cusum_vec <- function(x) {
   sqrt(t * (n - t) / n) * abs(m1 - m2)
 }
 
-cusum_plot <- function(x, threshold1 = NULL, threshold2 = NULL,
-                       start = 1, n = length(x)) {
+cusum_plot <- function(x, threshold1 = NULL, threshold2 = NULL, start = 1, n = length(x)) {
   cusum <- cusum_vec(x)
   tau_hat <- which.max(cusum)
 
@@ -45,24 +47,15 @@ cusum_plot <- function(x, threshold1 = NULL, threshold2 = NULL,
   p <- ggplot(df, aes(t, cusum)) +
     geom_line(size = 0.3) +
     coord_cartesian(xlim = c(1, n)) +
-    geom_vline(
-      xintercept = tau_hat + start - 1,
-      linetype = "dashed", colour = "red"
-    ) +
+    geom_vline(xintercept = tau_hat + start - 1, linetype = "dashed", colour = "red") +
     labs(x = "", y = "CUSUM Statistic") +
     theme_minimal()
 
   if (!is.null(threshold1)) {
-    p <- p + geom_hline(
-      yintercept = threshold1, colour = "darkgreen",
-      linetype = "solid", size = 0.3
-    )
+    p <- p + geom_hline(yintercept = threshold1, colour = "darkgreen", linetype = "solid", size = 0.3)
   }
   if (!is.null(threshold2)) {
-    p <- p + geom_hline(
-      yintercept = threshold2, colour = "purple",
-      linetype = "solid", size = 0.3
-    )
+    p <- p + geom_hline(yintercept = threshold2, colour = "purple", linetype = "solid", size = 0.3)
   }
 
   print(p)
@@ -76,10 +69,8 @@ cusum_plot(data1)
 data2 <- change_in_mean_define(c(10, 11), c(100, 200))
 cons_threshold <- 2 * log(300)
 close_threshold <- 2 * log(log(300))
-
 # fig2.3b
 cusum_plot(data2, threshold1 = cons_threshold, threshold2 = close_threshold)
-
 # fig2.3c
 data3 <- change_in_mean_define(c(10, 12), c(100, 200))
 cusum_plot(data3, threshold1 = cons_threshold, threshold2 = close_threshold)
