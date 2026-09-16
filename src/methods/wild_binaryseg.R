@@ -3,7 +3,7 @@ library(ggplot2)
 set.seed(10)
 source("src/utils/plotchanges.R")
 source("scripts/cusum/cusumex.R")
-source("scripts/binseg/binarysegmentation.R")
+source("scripts/binseg/binary_segmentation.R")
 
 cusum_wrapper <- function(z, start, c, n, join = FALSE) {
   m <- length(z)

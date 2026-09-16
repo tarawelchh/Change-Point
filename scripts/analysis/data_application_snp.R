@@ -1,27 +1,21 @@
 source("scripts/binseg/binseg_var.R")
 source("scripts/bottomup/bottomup_var.R")
 source("scripts/slidingwindow/slidingwindow_var.R")
-raw_data <- read.csv("data/psgskkke2m0wz7g9.csv", stringsAsFactors = FALSE)
 library(dplyr)
 library(lubridate)
+library(scales)
 library(changepoint) # for pelt
 library(ggplot2)
 library(moments) # to check kurtosis
+source("src/load_data.R")
+source("src/preprocess_data.R")
 
-get_dates_myone <- function(op) {
-  if (length(op) == 0) {
-    return(NULL)
-  }
-  return(as.Date(clean$Date[op]))
-}
 
-clean <- raw_data %>%
-  mutate(
-    Date = ymd(DlyCalDt),
-    Return = as.numeric(DlyRet)
-  )
+clean <- clean_data(snp_data)
 n <- nrow(clean)
+################
 
+##### EXPLORE DATA MEAN, SD, NORMALITY #####
 kurtosis(clean$Return) # perfect normal has kurtosis of 3
 
 clean$Return <- log(1 + clean$Return)
@@ -61,10 +55,10 @@ ggplot(clean, aes(x = Date, y = Return)) +
   geom_hline(yintercept = -3 * global_mad, color = "blue", size = 0.5) +
   theme_minimal()
 
-
 clean$StdReturn <- clean$Return / global_mad
+################################
 
-################## TUNING K #######
+######## TUNING K #######
 cpt_count_K <- function(K) {
   threshold <- K * log(n)
   fit <- cpt.var(clean$StdReturn,
@@ -86,6 +80,8 @@ threshold_df <- data.frame(
 ggplot(threshold_df, aes(x = K, y = changepoints)) +
   labs(y = "Number of Change Points", x = "K") +
   geom_line(color = "black", size = 0.5) +
+  scale_x_continuous(breaks = breaks_pretty(n = 10)) +
+  scale_y_continuous(breaks = breaks_pretty(n = 10)) +
   theme_minimal()
 
 dlist <- deltalist(clean$StdReturn)
@@ -102,10 +98,13 @@ ggplot(dlistdf, aes(x = x, y = y)) +
   geom_line(size = 0.5) +
   geom_hline(yintercept = log(c_loose), color = "red", linetype = "dashed", linewidth = 0.5) +
   geom_hline(yintercept = log(c_strict), color = "blue", linewidth = 0.5) +
+  scale_x_continuous(breaks = breaks_pretty(n = 10)) +
+  scale_y_continuous(breaks = breaks_pretty(n = 10)) +
   theme_minimal()
 
 # 2 changepoints since this is the plateau - robust since there are loads of them
 ######################
+
 
 pelt_strict <- cpt.var(clean$StdReturn,
   method = "PELT",
@@ -124,7 +123,7 @@ get_dates <- function(cpt_model) {
   return(as.Date(clean$Date[indices]))
 }
 
-##### binseg bottom up pelt #########
+##### binseg bottom up pelt #####
 binseg_loose_myone <- binseg_wrapper(clean$StdReturn, c_loose, minseg = 5)
 binseg_strict_myone <- binseg_wrapper(clean$StdReturn, c_strict, minseg = 5)
 
@@ -141,7 +140,7 @@ bottomup_strict_dates <- get_dates_myone(bottomup_strict_myone$cps)
 
 bottomup_plot_loose <- bottomup_loose_myone$costs[bottomup_loose_myone$costs != 0]
 bottomup_plot_strict <- bottomup_strict_myone$costs[bottomup_strict_myone$costs != 0]
-
+#####
 
 ########## LOOSE SW H TUNE #########
 # SLIDING WINDOW H TUNING
@@ -168,16 +167,13 @@ ggplot(l_results_grid, aes(x = factor(h_val), y = factor(eta_val), fill = total_
     breaks = c(2, 4, 6, 8, 10, 20),
     guide  = guide_colorsteps(even.steps = TRUE, show.limits = TRUE)
   ) +
-  # Add your thesis-ready labels
   labs(
     x = "h",
     y = "eta"
   ) +
-
-  # Clean up the background to look professional
   theme_minimal(base_size = 10) +
   theme(
-    panel.grid = element_blank(), # Removes default background lines
+    panel.grid = element_blank(),
     plot.title = element_text(face = "bold"),
     legend.position = "right"
   )
@@ -224,7 +220,9 @@ ggplot(sliding_sensitivity, aes(x = Date, y = Statistic)) +
   ) +
   labs(title = NULL, y = "GLLR Test Statistic")
 
-######### STRICT SW H TUNE ##################
+#############
+
+####### STRICT SW H TUNE #########
 h_values_s <- seq(60, 200, by = 5)
 eta_values_s <- seq(10, 200, by = 10)
 
@@ -300,13 +298,14 @@ ggplot(sliding_sensitivity, aes(x = Date, y = Statistic)) +
   theme(axis.title.x = element_blank(), ) +
   labs(title = NULL, y = "GLLR Test Statistic")
 
-############ SW FINAL #########
+##########
 
+############ SW FINAL #########
 slidingwindow_strict <- sliding_window_vectorised(clean$StdReturn, 90, 120, c_strict)
 slidingwindow_loose <- sliding_window_vectorised(clean$StdReturn, 50, 120, c_loose)
 slidingwindow_loose_dates <- as.Date(get_dates_myone(slidingwindow_loose$cps))
 slidingwindow_strict_dates <- as.Date(get_dates_myone(slidingwindow_strict$cps))
-
+############
 
 ######## PLOTS##########
 ###### loose plot #######
@@ -362,3 +361,4 @@ ggplot(clean, aes(x = Date, y = StdReturn)) +
     axis.text.y = element_blank(),
     axis.title.x = element_blank(),
   )
+#############
