@@ -4,9 +4,9 @@
 
 ## Methodology 
 This project implements the following algorithms from scratch:
-*** Binary Segmentation (BinSeg)
-*** Bottom-Up 
-*** Sliding Window 
+* Binary Segmentation (BinSeg)
+* Bottom-Up 
+* Sliding Window 
 
 The methods discussed are then applied to S&P500 data and mixed stock data.
 
