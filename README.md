@@ -14,9 +14,10 @@ See `thesis/Methods Poster.pdf`
 ### Presentation 
 See `thesis/Methods Presentation.pdf`.
 Also created animations for ease of explanation. 
-<img width="600"  alt="slidingwindow" src="https://github.com/user-attachments/assets/62376744-eb38-499c-9253-4f012e0f654f" /><img width="600" alt="bottomup" src="https://github.com/user-attachments/assets/ac850c45-f341-495e-8c48-16ef9ce52390" />
-
-
+Sliding Window:
+<img width="600"  alt="slidingwindow" src="https://github.com/user-attachments/assets/62376744-eb38-499c-9253-4f012e0f654f" />
+Bottom Up:
+<img width="600" alt="bottomup" src="https://github.com/user-attachments/assets/ac850c45-f341-495e-8c48-16ef9ce52390" />
 
 
 ## Methodology 
