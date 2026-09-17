@@ -8,7 +8,7 @@ stocks as the drivers of this change, consistent with the impact of travel restr
 ## Methodology 
 ### CUSUM Statistic 
 For a time series $X_t$, the CUSUM statistic is given by:
-$ C_k(X) = 1/\sigma \sqrt{\frac{k(n-k)}{n}} \abs{X_{1:k}-X_{k+1:n}} $
+$C_k(X) = 1/\sigma \sqrt{\frac{k(n-k)}{n}} \abs{X_{1:k}-X_{k+1:n}}$
 This is implemented with examples in `src/cusumex.R`, producing the following plots for n=200, with a change in mean at t=100.
 ![example data](thesis/plots/CUSUMeg.png)
 ![cusum example plot](thesis/plots/CUSUMPlot.png)
