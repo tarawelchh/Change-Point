@@ -21,7 +21,6 @@ Sliding Window:
 Bottom Up:
 <img width="600" alt="bottomup" src="https://github.com/user-attachments/assets/ac850c45-f341-495e-8c48-16ef9ce52390"/>
 
-
 ## Methodology 
 ### CUSUM Statistic 
 For a time series $X_t$, the CUSUM statistic is given by:
