@@ -15,7 +15,9 @@ See `thesis/Methods Poster.pdf`
 See `thesis/Methods Presentation.pdf`.
 Also created animations for ease of explanation. 
 
-https://github.com/user-attachments/assets/af11ae08-4ed3-4197-8a13-b6be6872d8c8/6877923/115474571-03c75800-a23e-11eb-8096-8973aad5fa9f.mp4
+https://github.com/user-attachments/assets/876bbe09-4e64-4081-aaaf-0995e8bb1895
+
+
 
 ## Methodology 
 ### CUSUM Statistic 
