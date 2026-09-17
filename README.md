@@ -10,12 +10,14 @@ Poster and presentation created in the early stages of the project to highlight 
 Explanation of model assumptions and three heuristic methods for detecting multiple changes, with application to 'Nile River' and 'UK Driver Deaths' datasets. 
 ### Poster
 <img width="2000" height="1411" alt="image" src="https://github.com/user-attachments/assets/05e16fcb-3834-4530-b8a5-e1e3a85931a1"/>
+
 See `thesis/Methods Poster.pdf`
 ### Presentation 
 See `thesis/Methods Presentation.pdf`.
 Also created animations for ease of explanation. 
 Sliding Window:
 <img width="600"  alt="slidingwindow" src="https://github.com/user-attachments/assets/62376744-eb38-499c-9253-4f012e0f654f"/>
+
 Bottom Up:
 <img width="600" alt="bottomup" src="https://github.com/user-attachments/assets/ac850c45-f341-495e-8c48-16ef9ce52390"/>
 
