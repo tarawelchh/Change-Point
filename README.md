@@ -22,28 +22,30 @@ Also created animations for ease of explanation.
 <img width="600" alt="bottomup" src="https://github.com/user-attachments/assets/ac850c45-f341-495e-8c48-16ef9ce52390"/>
 
 ## Methodology 
-### CUSUM Statistic 
-For a time series $X_t$, the CUSUM statistic is given by:
-$C_k(X) = \frac{1}{\sigma} \sqrt{\frac{k(n-k)}{n}} |{X_{1:k}-X_{k+1:n}}|$
-This is implemented with examples in `src/cusumex.R`, producing the following plots for n=200, with a change in mean at t=100.
-<img src="thesis/plots/cusum/CUSUMeg.png" alt="example cusum data" height="200"> <img src="/thesis/plots/cusum/CUSUMPlot.png" alt="example cusum plot" height="200">
 
-
-This project implements the following algorithms from scratch:
+This project implements the following from scratch:
+* CUSUM Statistic 
 * Binary Segmentation (BinSeg)
 * Bottom-Up 
-* Sliding Window 
+* Sliding Window
+* Bayesian Change Point Detection
 
-The methods discussed are then applied to S&P500 data and mixed stock data.
+Plots are produced in each to demonstrate an example, typically highlighting the pros/cons of that particular change point detection method and the importance of careful threshold selection. 
+
+The methods discussed are then applied to S&P500 data and a portfolio of stocks (`scripts/analysis`). 
 
 ## Repository Structure 
 * `src/methods` : Core implementation (e.g. `binary_segmentation.R`)
 * `src/utils` : Helper functions for data loading, preprocessing, generating plots
 * `scripts/analysis` : Standalone scripts for S&P application (`data_application_snp.R`) and stock portfolio application (`data_application_mixed.R`)
-* `thesis/` : Full PDF thesis and all visualisations
+* `thesis/` : Full PDF thesis, all visualisations, poster and presentation. 
 
-## Reproducing the experiments 
-A WRDS subscription is required. Alternative data (TODO) 
+## Reproducing the Analysis
+A WRDS subscription is required to reproduce the analysis. All core implementation can be run without WRDS. Alternative data (TODO) 
+
+1. Run `src/utils/load_data.R` to load required datasets. WRDS login is required.
+2. Check that `data/mixed_data.csv` and `data/snp_data.csv` have been created.
+3. Now able to run both scripts in `scripts/analysis`.
 
 ## Summary 
 (Add plots) 
