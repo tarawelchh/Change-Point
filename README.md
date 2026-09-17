@@ -1,8 +1,18 @@
-# Master's Thesis: 'A Likelihood Ratio Framework for Change Point Detection with Applications to Financial Time Series'.
+# Master's Thesis: 'A Likelihood Ratio Framework for Change Point Detection with Applications to Financial Time Series'
 
-## Overview
+## Overview 
+This report uses a likelihood ratio framework to develop methods for detecting changes in the mean and variance of a time series. We begin by considering a single change point under a univariate signal-plus-noise model and extend this to cover multiple change points and multivariate and high-dimensional data, with parallels drawn to the Bayesian paradigm. We subsequently relax the independence assumption through autoregressive and vector autoregressive models, which capture temporal and cross-sectional dependence respectively. We derive thresholds for the
+limiting behaviour of the generalised log-likelihood ratio test statistic and align these with established information criteria. The methods are applied to S&P 500 returns and a portfolio of stocks during the period 2018-2022. Multiple detection algorithms consistently identify a change point in February 2020 corresponding to the onset of the COVID-19 pandemic, with INSPECT identifying airline, energy, and financial
+stocks as the drivers of this change, consistent with the impact of travel restrictions, the oil price crash, and financial uncertainty during the pandemic.
 
 ## Methodology 
+### CUSUM Statistic 
+For a time series $X_t$, the CUSUM statistic is given by:
+$C_k(X) = 1/\sigma \sqrt{\frac{k(n-k)}{n}} \abs{X_{1:k}-X_{k+1:n}}
+This is implemented with examples in `src/cusumex.R`, producing the following plots for n=200, with a change in mean at t=100.
+![example data](thesis/plots/CUSUMeg.png)
+![cusum example plot](thesis/plots/CUSUMPlot.png)
+
 This project implements the following algorithms from scratch:
 * Binary Segmentation (BinSeg)
 * Bottom-Up 
