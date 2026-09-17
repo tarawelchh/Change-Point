@@ -6,11 +6,17 @@ limiting behaviour of the generalised log-likelihood ratio test statistic and al
 stocks as the drivers of this change, consistent with the impact of travel restrictions, the oil price crash, and financial uncertainty during the pandemic.
 
 ## Supplementary Poster and Presentation
-
-### Presentation 
-
+Poster and presentation created in the early stages of the project to highlight learnings so far. 
+Explanation of model assumptions and three heuristic methods for detecting multiple changes, with application to 'Nile River' and 'UK Driver Deaths' datasets. 
 ### Poster
 <img width="2000" height="1411" alt="image" src="https://github.com/user-attachments/assets/05e16fcb-3834-4530-b8a5-e1e3a85931a1" />
+See `thesis/Methods Poster.pdf`
+### Presentation 
+See `thesis/Methods Presentation.pdf`.
+Also created animations for ease of explanation. 
+
+https://github.com/user-attachments/assets/af11ae08-4ed3-4197-8a13-b6be6872d8c8
+/6877923/115474571-03c75800-a23e-11eb-8096-8973aad5fa9f.mp4
 
 ## Methodology 
 ### CUSUM Statistic 
