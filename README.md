@@ -1,3 +1,4 @@
+<img width="800" height="450" alt="slidingwindow" src="https://github.com/user-attachments/assets/42ebf956-a657-4907-8917-3ff197276074" />
 # Master's Thesis: 'A Likelihood Ratio Framework for Change Point Detection with Applications to Financial Time Series'
 
 ## Overview 
@@ -16,6 +17,7 @@ See `thesis/Methods Presentation.pdf`.
 Also created animations for ease of explanation. 
 
 <video width="100" alt="Sliding Window Video" src = "https://github.com/user-attachments/assets/876bbe09-4e64-4081-aaaf-0995e8bb1895.mp4" autoplay loop muted playsinline></video>
+<img width="800" height="450" alt="slidingwindow" src="https://github.com/user-attachments/assets/62376744-eb38-499c-9253-4f012e0f654f" />
 
 
 
