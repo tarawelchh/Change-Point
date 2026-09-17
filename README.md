@@ -10,7 +10,7 @@ stocks as the drivers of this change, consistent with the impact of travel restr
 ### Presentation 
 
 ### Poster
-<img src="thesis/Methods Poster.pdf" alt="Multiple Change Point Detection Methods Poster">
+<img width="2000" height="1411" alt="image" src="https://github.com/user-attachments/assets/05e16fcb-3834-4530-b8a5-e1e3a85931a1" />
 
 ## Methodology 
 ### CUSUM Statistic 
