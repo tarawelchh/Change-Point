@@ -1,6 +1,6 @@
 set.seed(15)
 library(ggplot2)
-source("~/Desktop/CPA/Final Code/plotchanges.R")
+source("src/utils/plot_changes.R")
 
 cusum <- function(x, t) {
   n <- length(x)
