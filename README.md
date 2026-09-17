@@ -5,6 +5,13 @@ This report uses a likelihood ratio framework to develop methods for detecting c
 limiting behaviour of the generalised log-likelihood ratio test statistic and align these with established information criteria. The methods are applied to S&P 500 returns and a portfolio of stocks during the period 2018-2022. Multiple detection algorithms consistently identify a change point in February 2020 corresponding to the onset of the COVID-19 pandemic, with INSPECT identifying airline, energy, and financial
 stocks as the drivers of this change, consistent with the impact of travel restrictions, the oil price crash, and financial uncertainty during the pandemic.
 
+## Supplementary Poster and Presentation
+
+### Presentation 
+
+### Poster
+
+
 ## Methodology 
 ### CUSUM Statistic 
 For a time series $X_t$, the CUSUM statistic is given by:
@@ -15,7 +22,7 @@ This is implemented with examples in `src/cusumex.R`, producing the following pl
 
 This project implements the following algorithms from scratch:
 * Binary Segmentation (BinSeg)
-* Bottom-Up 
+* Bottom-Up [https://www.youtube.com/watch?v=eCNi8ouTpiI](Bottom Up Video)
 * Sliding Window 
 
 The methods discussed are then applied to S&P500 data and mixed stock data.
