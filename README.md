@@ -17,7 +17,7 @@ See `thesis/Methods Presentation.pdf`.
 Also created animations for ease of explanation. 
 Sliding Window:
 <img width="600"  alt="slidingwindow" src="https://github.com/user-attachments/assets/62376744-eb38-499c-9253-4f012e0f654f"/>
-
+\\
 Bottom Up:
 <img width="600" alt="bottomup" src="https://github.com/user-attachments/assets/ac850c45-f341-495e-8c48-16ef9ce52390"/>
 
@@ -31,7 +31,7 @@ This is implemented with examples in `src/cusumex.R`, producing the following pl
 
 This project implements the following algorithms from scratch:
 * Binary Segmentation (BinSeg)
-* Bottom-Up [https://www.youtube.com/watch?v=eCNi8ouTpiI](Bottom Up Video)
+* Bottom-Up 
 * Sliding Window 
 
 The methods discussed are then applied to S&P500 data and mixed stock data.
