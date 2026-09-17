@@ -15,7 +15,7 @@ See `thesis/Methods Poster.pdf`
 See `thesis/Methods Presentation.pdf`.
 Also created animations for ease of explanation. 
 
-<vid width="2000" alt="Sliding Window Video" src = "https://github.com/user-attachments/assets/876bbe09-4e64-4081-aaaf-0995e8bb1895" />
+<video width="1000" alt="Sliding Window Video" src = "https://github.com/user-attachments/assets/876bbe09-4e64-4081-aaaf-0995e8bb1895" />
 
 
 
