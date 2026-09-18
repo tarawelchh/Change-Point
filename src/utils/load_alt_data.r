@@ -13,9 +13,9 @@ yahoo_fallback_data <- function(tickers, start_date = "2018-01-01", end_date = "
     returns_matrix <- data.frame(DlyCalDt = index(returns_matrix), returns_matrix)
     returns_df <- pivot_longer(
         data = returns_matrix,
-        cols = -DlyCalDt, # This tells R to pivot everything EXCEPT the date column
-        names_to = "Ticker", # The new column that will hold the ticker symbols
-        values_to = "DlyRet" # The new column that will hold the returns
+        cols = -DlyCalDt,
+        names_to = "Ticker",
+        values_to = "DlyRet"
     )
 
 
