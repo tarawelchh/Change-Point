@@ -1,6 +1,7 @@
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+library(patchwork)
 library(tidyr)
 library(tseries) # for adf
 library(InspectChangepoint) # for pivot
@@ -9,15 +10,13 @@ library(glue)
 library(vars)
 set.seed(123)
 
-source("src/load_data.R")
-source("src/preprocess_data.R")
+source("src/utils/load_data.R")
+source("src/utils/preprocess_data.R")
+source("src/methods/wald_changepoint.R")
 
+#### clean and format data #####
 clean <- clean_data(mixed_data)
 n <- nrow(clean)
-wide_matrix <- create_wide_matrix(clean)
-data <- wide_matrix[, -1]
-
-# one col per stock
 wide_matrix <- create_wide_matrix(clean)
 dates <- wide_matrix$Date
 stocks <- wide_matrix %>% dplyr::select(-Date)
@@ -25,52 +24,44 @@ stocks <- wide_matrix %>% dplyr::select(-Date)
 log_returns <- log(1 + stocks)
 final_var_matrix <- as.matrix(log_returns)
 rownames(final_var_matrix) <- as.character(dates)
+####
 
-make_X_tilde <- function(Y, p_lag) {
-  Y_embed <- embed(Y, p_lag + 1)
-  X_tilde <- cbind(1, Y_embed[, (ncol(Y) + 1):ncol(Y_embed)])
-  list(
-    X_t     = Y_embed[, 1:ncol(Y)],
-    X_tilde = X_tilde
-  )
-}
-
-Y <- final_var_matrix
+#### VAR Setup ####
 p_lag <- 1
-data <- make_X_tilde(Y, p_lag)
-
-adf_pvals <- apply(Y, 2, function(x) {
-  adf.test(x)$p.value
-})
-adf_pvals
-
+data <- make_X_tilde(final_var_matrix, p_lag)
 X_t <- data$X_t
 X_tilde <- data$X_tilde
 
-ntime <- nrow(X_t)
-d <- ncol(X_t)
-dp1 <- ncol(X_tilde)
-trim <- floor(0.2 * ntime)
-grid <- trim:(ntime - trim)
-
-
-resid_full <- sapply(1:13, function(j) {
+resid_full <- sapply(1:ncol(stocks), function(j) {
   resid(lm(X_t[, j] ~ X_tilde))
 })
-
-rownames(resid_full) <- dates[2:1259]
+rownames(resid_full) <- as.character(dates[2:length(dates)])
 colnames(resid_full) <- colnames(stocks)
 abs_resid <- abs(resid_full)
-
 inspect_matrix <- t(abs_resid)
+####
 
-threshold_optimal <- (log(13 * log(n)))
-inspect2 <- inspect((inspect_matrix), M = 1000, threshold = 10 * threshold_optimal)
-inspect_cps <- inspect2$changepoints[, "location"]
+#### augmented dickey fuller test for stationarity ####
+adf_pvals <- apply(final_var_matrix, 2, function(x) {
+  adf.test(x)$p.value
+})
+adf_pvals
+####
+
+#### implement inspect  ####
+locate.change(inspect_matrix, lambda = 5, view.cusum = TRUE, standardize.series = TRUE) # locates single changepoint, gives projection vector and plot
+
+# multiple change point implementation with threshold
+C <- 10
+threshold_optimal <- (log(ncol(stocks) * log(n)))
+inspect_result <- inspect((inspect_matrix), M = 1000, threshold = 10 * threshold_optimal) # empirically tuned C to have a reasonable number of changepoints
+inspect_cps <- inspect_result$changepoints[, "location"]
 inspect_dates <- as.Date(sapply(inspect_cps, get_dates_myone))
-inspect_df <- data.frame(Dates = inspect_dates, Scores = inspect2$changepoints[, "max.proj.cusum"])
+inspect_df <- data.frame(Dates = inspect_dates, Scores = inspect_result$changepoints[, "max.proj.cusum"])
 inspect_df |> arrange(desc(Scores))
+####
 
+#### plot located change points on residual heatmap ####
 resid_melt <- melt(abs_resid)
 colnames(resid_melt) <- c("date", "stock", "value")
 resid_melt$date <- as.Date(resid_melt$date)
@@ -89,46 +80,22 @@ ggplot(resid_melt, aes(x = date, y = stock, fill = value)) +
   labs(x = "", y = "", ) +
   theme_minimal() +
   theme(axis.text.y = element_text(size = 9))
+####
 
-locate.change(inspect_matrix, lambda = 5, view.cusum = TRUE, standardize.series = TRUE)
-cps <- data.frame(candidates = inspect2$changepoints[, "location"], scores = inspect2$changepoints[, "max.proj.cusum"])
+#### Calculate Wald Statistic
+ntime <- nrow(X_t)
+d <- ncol(X_t)
+dp1 <- ncol(X_tilde)
+trim <- floor(0.2 * ntime)
+grid <- trim:(ntime - trim)
 
 Sigma_hat <- crossprod(resid_full) / ntime # covariance estimator
 Sigma_hat_inv <- solve(Sigma_hat)
 
-# dp1 = dxp+1
-fit_pi <- function(X_t, X_tilde, tau) {
-  d <- ncol(X_t)
-  ntime <- nrow(X_t)
-  indicator <- c(rep(0, tau), rep(1, ntime - tau))
-  XD <- cbind(X_tilde, indicator * X_tilde)
-
-  B_hat <- sapply(1:d, function(j) {
-    coef(lm(X_t[, j] ~ XD - 1))
-  })
-  B_hat[(dp1 + 1):(2 * dp1), ]
-}
-
-get_xtx_break <- function(X_tilde, tau, ntime, dp1) {
-  indicator <- c(rep(0, tau), rep(1, ntime - tau))
-  XD <- cbind(X_tilde, indicator * X_tilde)
-  XtX <- crossprod(XD)
-  XtX_inv <- solve(XtX)
-  XtX_inv[(dp1 + 1):(2 * dp1), (dp1 + 1):(2 * dp1)]
-}
-
-wald_dense <- function(pi_hat, XtX_break, Sigma_hat) {
-  b_vec <- as.vector(pi_hat)
-  XtX_break_inv <- solve(XtX_break)
-  V_inv <- kronecker(Sigma_hat_inv, XtX_break_inv)
-  as.numeric(t(b_vec) %*% V_inv %*% b_vec)
-}
-
-# join
 wald_stats <- sapply(grid, function(tau) {
   pi_hat <- fit_pi(X_t, X_tilde, tau)
   XtX_break <- get_xtx_break(X_tilde, tau, ntime, dp1)
-  W <- wald_dense(pi_hat, XtX_break, Sigma_hat)
+  wald_dense(pi_hat, XtX_break, Sigma_hat)
 })
 
 tau_hat <- grid[which.max(wald_stats)]
@@ -152,13 +119,14 @@ ggplot(resultsdf, aes(x = days, y = wald)) +
     axis.title.x = element_blank(),
   )
 
-
-VARselect(Y, lag.max = 10, type = "const")
+#### diagnostics ####
+VARselect(final_var_matrix, lag.max = 10, type = "const")
 
 lb_results <- apply(resid_full, 2, function(x) {
   Box.test(x, lag = 10, type = "Ljung-Box")$p.value
 })
 round(lb_results, 3)
+####
 
 ###### CORRELATION #######
 data <- wide_matrix[, -1]
@@ -194,7 +162,7 @@ p1 <- ggplot(melted_pre, aes(Var2, Var1, fill = value)) +
     legend.position = "right"
   )
 
-colnames(cor_post) <- rownames(cor_post) <- colnames(Y)
+colnames(cor_post) <- rownames(cor_post) <- colnames(final_var_matrix)
 melted_post <- melt(cor_post)
 
 p2 <- ggplot(melted_post, aes(Var2, Var1, fill = value)) +

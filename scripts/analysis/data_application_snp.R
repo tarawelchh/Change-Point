@@ -1,14 +1,14 @@
-source("scripts/binseg/binseg_var.R")
-source("scripts/bottomup/bottomup_var.R")
-source("scripts/slidingwindow/slidingwindow_var.R")
+source("src/methods/binseg/binseg_var.R")
+source("src/methods/bottomup/bottomup_var.R")
+source("src/methods/slidingwindow_var.R")
 library(dplyr)
 library(lubridate)
 library(scales)
 library(changepoint) # for pelt
 library(ggplot2)
 library(moments) # to check kurtosis
-source("src/load_data.R")
-source("src/preprocess_data.R")
+source("src/utils/load_data.R")
+source("src/utils/preprocess_data.R")
 
 
 clean <- clean_data(snp_data)
