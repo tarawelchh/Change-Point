@@ -41,11 +41,55 @@ The methods discussed are then applied to S&P500 data and a portfolio of stocks 
 * `thesis/` : Full PDF thesis, all visualisations, poster and presentation. 
 
 ## Reproducing the Analysis
-A WRDS subscription is required to reproduce the analysis. All core implementation can be run without WRDS. Alternative data (TODO) 
+A WRDS subscription is required to reproduce the analysis. All core implementation can be run without WRDS. Alternatively press enter when prompted for username and password and Yahoo Finance data will be used. 
 
-1. Run `src/utils/load_data.R` to load required datasets. WRDS login is required.
+1. Run `src/utils/load_data.R` to load required datasets. 
 2. Check that `data/mixed_data.csv` and `data/snp_data.csv` have been created.
 3. Now able to run both scripts in `scripts/analysis`.
 
 ## Summary 
-(Add plots) 
+### S&P500 Data
+All applied algorithms (PELT, binary segmentation, bottom-up and sliding window) detected a change point
+within two days of 21 February 2020, suggesting this to be the most significant change. This
+coincides with ‘the last trading day before the market jump that contemporaneous newspaper
+accounts attribute to COVID-19’, and so aligns with real-world events.
+
+PELT, bottom-up and binary segmentation all detected a second change within one day of 22 April 2020, which
+follows immediately after ‘the fall of WTI crude oil futures by more than 300%’ on 20 April.  We note that the binary segmentation algorithm produced identical results to PELT,
+highlighting its strength in accurately detecting global changes. Sliding Window required tuning of parameters $\eta$ and $h$. 
+
+<img width="866" height="473" alt="Screenshot 2026-09-18 at 20 06 56" src="https://github.com/user-attachments/assets/10578478-bd4a-4e00-8764-88c495721f53" />
+
+<img width="896" height="383" alt="Screenshot 2026-09-18 at 20 09 12" src="https://github.com/user-attachments/assets/2e2b1dd8-8005-48a2-bf8a-7726abcb1d99" />
+
+### Stock Portfolio Data
+#### Inspect:
+
+<img width="872" height="337" alt="Screenshot 2026-09-18 at 20 07 45" src="https://github.com/user-attachments/assets/9f7c00a6-5629-4b1e-a563-33098bb4d0ac" />
+
+We use the InspectChangepoint package on the absolute value of the residuals from each
+series, as these should be approximately i.i.d.. Utilising wild binary segmentation within
+the ‘inspect’ function and a threshold c= 10 ln(13 ln(n)) resulted in detection of two change
+points, shown in 5.5a. We note that the first change point (20 February 2020) aligns with
+the findings of the univariate S&P 500 data, and the second aligns with the ‘worst one day
+sell-off’ of U.S. stocks since March 2020 amid growing concerns of a second wave of coronavirus. The elements of the sparse projection vector and their corresponding weights for the
+February change are shown in 5.5b. This highlights the power of the INSPECT algorithm in
+identifying which series underwent a change, with the airline, energy and financials breaking
+simultaneously and accounting for 95% of the projection vector, whereas other sectors such
+as technology and consumer staples had negligible weights. This is again consistent with the
+context of the pandemic, as travel restrictions and economic uncertainty affect these changing
+stocks significantly more than those with negligible weights.
+
+#### VAR Model:
+<img width="820" height="622" alt="Screenshot 2026-09-18 at 20 12 27" src="https://github.com/user-attachments/assets/747cd74f-4e5e-4239-bd48-11f48282c400" />
+
+Computing the estimated residual covariance matrix before and after the identified change point
+and plotting the residual correlation for each regime, we obtain figure 5.7. The change in lag
+parameters coincides with a change in correlation. Stocks in the same sector remain correlated
+(for example CVX and XOM), but between-sector correlations become considerably weaker.
+This is consistent with the heterogeneous impact of the pandemic across sectors, so that sectors
+that previously moved together diverged. This finding aligns with the INSPECT weightings,
+which indicated some sectors (airlines, energy, financials) were more severely impacted than
+others (technology, consumer staples).
+
+
