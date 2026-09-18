@@ -1,7 +1,7 @@
 set.seed(10)
 library(glue)
 source("src/utils/plot_changes.R")
-source("src/cusumex.R")
+source("src/methods/cusumex.R")
 
 cusum_wrapper <- function(z, start, c, n, join = FALSE) {
   m <- length(z)

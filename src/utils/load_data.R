@@ -1,6 +1,16 @@
 library(DBI)
 library(RPostgres)
 library(getPass)
+source("src/utils/load_alt_data.R")
+
+fetch_yahoo_data <- function() {
+    tickers <- c("MSFT", "AAL", "BAC", "AMZN", "CVX", "DAL", "JPM", "MSFT", "NFLX", "PFE", "PG", "UAL", "XOM", "WMT")
+    mixed_returns <- yahoo_fallback_data(tickers)
+    snp_returns <- yahoo_fallback_data("SPY")
+
+    write.csv(mixed_returns, file.path("data", "mixed_data.csv"), row.names = FALSE)
+    write.csv(snp_returns, file.path("data", "snp_data.csv"), row.names = FALSE)
+}
 
 fetch_wrds_data <- function() {
     if (!dir.exists("data")) {
@@ -10,6 +20,11 @@ fetch_wrds_data <- function() {
     cat("Connecting to WRDS \n")
     usr <- readline(prompt = "Enter WRDS Username: ")
     pwd <- getPass("Enter WRDS Password: ")
+
+    if (usr == "") {
+        fetch_yahoo_data()
+        return(invisible())
+    }
 
     con <- tryCatch(
         {
