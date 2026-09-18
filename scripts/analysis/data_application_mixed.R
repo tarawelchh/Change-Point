@@ -1,6 +1,7 @@
 library(dplyr)
 library(lubridate)
 library(ggplot2)
+library(patchwork)
 library(tidyr)
 library(tseries) # for adf
 library(InspectChangepoint) # for pivot
@@ -161,7 +162,7 @@ p1 <- ggplot(melted_pre, aes(Var2, Var1, fill = value)) +
     legend.position = "right"
   )
 
-colnames(cor_post) <- rownames(cor_post) <- colnames(Y)
+colnames(cor_post) <- rownames(cor_post) <- colnames(final_var_matrix)
 melted_post <- melt(cor_post)
 
 p2 <- ggplot(melted_post, aes(Var2, Var1, fill = value)) +
