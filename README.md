@@ -63,7 +63,7 @@ follows immediately after ‘the fall of WTI crude oil futures by more than 300%
 <img width="872" height="337" alt="Screenshot 2026-09-18 at 20 07 45" src="https://github.com/user-attachments/assets/9f7c00a6-5629-4b1e-a563-33098bb4d0ac" />
 
 * Utilising wild binary segmentation within
-the ‘inspect’ function and a threshold c= 10 ln(13 ln(n)) resulted in detection of two change
+the ‘inspect’ function and a threshold $c= 10 ln(13 \ln(n))$ resulted in detection of two change
 points. The first change point (20 February 2020) aligns with
 the findings of the univariate S&P 500 data, and the second aligns with the ‘worst one day
 sell-off’ of U.S. stocks since March 2020 amid growing concerns of a second wave of coronavirus.
